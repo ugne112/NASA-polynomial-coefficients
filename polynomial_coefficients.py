@@ -1,13 +1,13 @@
 """
 Below code calculates for a given species and t_range (200-1000) and (1000-tmax):
-1. Partition functions from ExoMol linelist data
+1. Partition functions from ExoMol line list data
 2. Heat capacity from obtained part. functions
 3. Least squares polynomial coefficients for heat capacity
 
 And saves all the above in /results folder as csv files.
 """
 
-import sys 
+import sys
 import os.path
 import numpy as np
 from numpy.polynomial import polynomial as P
@@ -26,10 +26,7 @@ class InputError(Exception):
 
 def set_species_name():
     species = input("Enter species name:")
-    if (
-        os.path.exists(sys.path[0] + "/input_data/linelists/" + species + ".txt")
-        == True
-    ):
+    if os.path.exists(sys.path[0] + "/data/linelists/" + species + ".txt") == True:
         return species
     else:
         raise InputError(
@@ -48,7 +45,7 @@ def set_t_range():
 
 def get_linelist_data(species):
 
-    linelist_data = sys.path[0] + "/input_data/linelists/" + species + ".txt"
+    linelist_data = sys.path[0] + "/data/linelists/" + species + ".txt"
 
     data = np.loadtxt(fname=linelist_data, usecols=(0, 1, 2))
 
@@ -65,9 +62,10 @@ def get_linelist_data(species):
 
 def get_tmax(species):
     """
-    Gets maximum temperature for a line list of a given species. This data was manually obtained from ExoMol def files.
+    Gets maximum temperature for a line list of a given species. 
+    This data was manually obtained from ExoMol def files.
     """
-    with open("tmax_values.json", "r") as jsonFile:
+    with open(sys.path[0] + "/data/linelists/tmax_values.json", "r") as jsonFile:
         jsonObject = json.load(jsonFile)
         jsonFile.close()
 
@@ -78,7 +76,9 @@ def get_tmax(species):
 
 def set_temperature_range(t_range, tmax):
     """
-    This function sets a temperature range for a given calculation. For species for which line list temperature range is above 6000, the function sets the maximum temperature to 6000 K.
+    This function sets a temperature range for a given calculation.
+    For species for which line list temperature range is above 6000,
+    the function sets the maximum temperature to 6000 K.
     """
 
     if t_range == "1":
@@ -99,8 +99,9 @@ def set_temperature_range(t_range, tmax):
 @njit
 def calculate_int_pf(linelists, temperature):
     """
-    This function calculates internal parition function from line list data using this equation:
-
+    This function calculates internal parition function from line list
+    data using this equation:
+    Q = sum[g(i) * exp(c2 E(i) / T)]
     """
 
     levels, Energy, degeneracy = linelists
@@ -119,6 +120,9 @@ def calculate_int_pf(linelists, temperature):
 
 @njit
 def calculate_int_pf_dif(linelists, temperature):
+    """ 
+    This function calculates the once differentiated internal partition function.
+    """
 
     levels, Energy, degeneracy = linelists
 
@@ -136,6 +140,9 @@ def calculate_int_pf_dif(linelists, temperature):
 
 @njit
 def calculate_int_pf_twice_dif(linelists, temperature):
+    """ 
+    This function calculates the twice differentiated internal partition function.
+    """
 
     levels, Energy, degeneracy = linelists
 
@@ -168,7 +175,7 @@ def save_pf_data(t_range, species, pf_data):
     df.to_csv(
         sys.path[0] + "/results/partition_functions/" + t_range + "/" + species + ".csv"
     )
-    print("Partition functions are calcualated and available in the results folder.")
+    print("Partition functions are calculated and available in the results folder.")
 
 
 @njit
@@ -218,6 +225,10 @@ def save_heat_capacity_data(t_range, species, heat_capacity):
 
 
 def polynomial_coefficients(temperature, heat_capacity_array):
+    """
+    This function uses a least squares fit routine to calculate polynomial temperature coeffcients
+    from heat capacity.
+    """
 
     y = np.zeros(len(temperature))
 

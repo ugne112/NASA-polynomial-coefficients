@@ -4,7 +4,7 @@ import pandas as pd
 import json
 import matplotlib.pyplot as plt
 from mpl_toolkits.axes_grid1.inset_locator import inset_axes
-from code import set_species_name
+from polynomial_coefficients import set_species_name
 
 R = 8.31446261815324  # Ideal gas constant
 
@@ -12,15 +12,15 @@ R = 8.31446261815324  # Ideal gas constant
 The below code calculates for the entire temperature range:
 1. Heat capacity from newly obtained coefficients (200 - tmax)
 2. Heat capacity from 2002 NASA coefficients (200 - 6000 K)
-And generates a plot to comapare #1, #2, JANAF data, and heat capacity generated 
-directly from partition functions.
+And generates a plot to comapare #1, #2, JANAF data, and heat capacity previously 
+generated from partition functions.
 """
 
 
 def get_NASA_coefficients(species, t_range="1"):
 
     NASA_data = (
-        sys.path[0] + "/input_data/NASA_2002/NASA_" + species + "_" + t_range + ".csv"
+        sys.path[0] + "/data/NASA_2002/NASA_" + species + "_" + t_range + ".csv"
     )
     NASA_coefficients = np.loadtxt(fname=NASA_data)
 
@@ -40,7 +40,6 @@ def set_temperature_range(t_range="1"):
     return temperature
 
 
-# Function to calculate heat capacity from coefficients
 def Cp_from_coefficients(tgrid1, tgrid2, coefficients1, coefficients2):
     """This function calculates heat capacity from coefficients based on this equation:
     Cp(T)/R = a1 * T^-2 + a2 * T^-1 + a3 + a4 * T + a5 * T^2 + a6 * T^3 + a7 * T^4
@@ -120,7 +119,7 @@ def get_new_coefficients(species, t_range="1"):
 
 def get_tgrid2_max(species):
 
-    with open("tmax_values.json", "r") as jsonFile:
+    with open(sys.path[0] + "/data/linelists/tmax_values.json", "r") as jsonFile:
         jsonObject = json.load(jsonFile)
         jsonFile.close()
 
@@ -137,7 +136,7 @@ def get_tgrid2_max(species):
 
 def get_JANAF_data(species):
 
-    JANAF = sys.path[0] + "/input_data/JANAF" + "/" + species + "_JANAF.txt"
+    JANAF = sys.path[0] + "/data/JANAF" + "/" + species + "_JANAF.txt"
     JANAF_data = np.loadtxt(fname=JANAF, skiprows=2, usecols=(0, 1), unpack=True)
     return JANAF_data
 
@@ -165,6 +164,13 @@ def get_pf_heat_capacity_data(species):
 
 
 def plot(species, Cp_pf, Cp_NASA, Cp_coeff, Cp_JANAF):
+    """
+    This function plots heat capacity as obtained from partition functions, 
+    heat capacity data from JANAF,
+    heat capacity as calculated from NASA and new coefficients,
+    and provides a residuals subplot for heat capacity from partition functions vs 
+    its coefficients.
+    """
 
     t_, Cp_ = np.hsplit((Cp_pf), 2)
     t_ = np.squeeze(t_)
@@ -201,7 +207,7 @@ def plot(species, Cp_pf, Cp_NASA, Cp_coeff, Cp_JANAF):
         label="This Work from Coefficients",
     )
 
-    axins = ax.inset_axes([0.63, 0.3, 0.35, 0.35])
+    axins = ax.inset_axes([0.65, 0.075, 0.3, 0.3])
     axins.plot(Cp_, residuals)
 
     ax.legend()

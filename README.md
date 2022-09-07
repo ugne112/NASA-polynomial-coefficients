@@ -31,9 +31,7 @@ Once everything is set up locally, polynomial coefficients can be calculated!
 ```
 python polynomial_coefficients.py
 ```
-Which is when you will be asked to enter a species name (currently, sample data exists for H2O and CO only)
-
-And temperature range
+Which is when you will be asked to enter a species name (currently, sample data exists for H2O and CO only) and temperature range
 
 <img width="682" alt="Screenshot 2022-09-08 at 00 55 51" src="https://user-images.githubusercontent.com/71969506/188990793-e98774b3-4771-427d-96cf-d6ad534a1712.png">
 

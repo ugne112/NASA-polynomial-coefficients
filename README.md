@@ -21,7 +21,7 @@ Please ensure these are installed before running the modules.
 ## Download
 Download the contents locally
 ```
-git clone https://github.com/ugne112/NASA-polynomial-coefficients
+git clone https://github.com/ugne112/NASA-polynomial-coefficients.git
 ```
 
 # Usage

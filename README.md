@@ -43,7 +43,7 @@ Upon completion, you will receive a message:
 
 <img width="528" alt="Screenshot 2022-09-08 at 01 04 39" src="https://user-images.githubusercontent.com/71969506/188991979-fa7e9d82-b5af-491f-be6a-51b3f969e52c.png">
 
-Onece you have run the polynomial_coefficients.py calculation for both temperature ranges for a given species, you can calculate heat capacity data from coefficients and produce a heat capacity comparison plot by running:
+Once you have run the polynomial_coefficients.py calculation for both temperature ranges for a given species, you can calculate heat capacity data from coefficients and produce a heat capacity comparison plot by running:
 ```
 python Cp_plot.py
 ```

@@ -28,6 +28,8 @@ git clone https://github.com/ugne112/NASA-polynomial-coefficients
 
 Once everything is set up locally, polynomial coefficients can be calculated!
 
+Navigate inside the directory to run
+
 ```
 python polynomial_coefficients.py
 ```
@@ -47,5 +49,6 @@ Similarly, to calculate heat capacity data from coefficients and produce a heat 
 python Cp_plot.py
 ```
 You will be asked to enter species name (again, sample data for H2O and CO only).
+
 Upon completion, the plot will come up.
 
